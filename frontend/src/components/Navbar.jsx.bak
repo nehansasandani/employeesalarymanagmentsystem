@@ -1,0 +1,189 @@
+import React, { useState } from "react";
+import { Link, useLocatio              <div className="px-4 py-3 text-sm border-b border-neutral-100">
+                        <p className="font-medium text-primary-800">{user?.name}</p>
+                        <p className="text-xs text-neutral-500">{user?.email}</p>
+                      </div>
+                      <Link 
+                        to="/profile" 
+                        className="block px-4 py-2 text-sm text-neutral-700 hover:bg-primary-50"avigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+
+const Navbar = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout, isAuthenticated } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.success) {
+      navigate('/login');
+    }
+  };
+    return (
+    <nav className="bg-white shadow-purple">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center py-4">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center shadow-sm">
+              <span className="text-white text-xl font-bold font-heading">QG</span>
+            </div>
+            <h2 className="text-2xl font-bold text-gradient bg-gradient-to-r from-primary-700 to-secondary-700 bg-clip-text text-transparent font-heading">QuickGrocery</h2>
+          </Link>
+
+          {isAuthenticated ? (
+            <>
+              <div className="hidden md:flex space-x-6 items-center">
+                <Link
+                  to="/"
+                  className={`${location.pathname === '/' ? 'text-primary-500 font-medium' : 'text-neutral-600 hover:text-primary-500'} transition-colors`}
+                >
+                  Employees
+                </Link>
+                <Link
+                  to="/add"
+                  className={`${location.pathname === '/add' ? 'text-primary-500 font-medium' : 'text-neutral-600 hover:text-primary-500'} transition-colors`}
+                >
+                  Add Employee
+                </Link>
+                <Link
+                  to="/salaries"
+                  className={`${location.pathname.startsWith('/salar') ? 'text-primary-500 font-medium' : 'text-neutral-600 hover:text-primary-500'} transition-colors`}
+                >
+                  Salary Management
+                </Link>
+
+                <div className="relative ml-3">
+                  <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-neutral-300"
+                    id="user-menu-button"
+                  >
+                    <div className="h-8 w-8 rounded-full bg-primary-200 flex items-center justify-center text-white">
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                  </button>
+
+                  {isMenuOpen && (
+                    <div
+                      className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-card py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10 animate-fade-in"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="user-menu-button"
+                    >
+                      <div className="px-4 py-2 text-sm text-neutral-700 border-b border-neutral-100">
+                        <p className="font-medium">{user?.name}</p>
+                        <p className="text-xs text-neutral-500">{user?.email}</p>
+                      </div>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Your Profile
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          handleLogout();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile menu button */}
+              <div className="md:hidden flex items-center">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="p-2 rounded-md text-neutral-600 hover:text-primary-500 hover:bg-neutral-100 focus:outline-none"
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
+                {/* Mobile menu */}
+                {isMenuOpen && (
+                  <div className="absolute top-16 right-0 left-0 bg-white shadow-md p-4 z-10 animate-fade-in">
+                    <div className="flex flex-col space-y-4">
+                      <Link
+                        to="/" 
+                        className={`${location.pathname === '/' ? 'text-primary-500 font-medium' : 'text-neutral-600'} px-3 py-2 rounded-md text-base`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Employees
+                      </Link>
+                      <Link
+                        to="/add" 
+                        className={`${location.pathname === '/add' ? 'text-primary-500 font-medium' : 'text-neutral-600'} px-3 py-2 rounded-md text-base`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Add Employee
+                      </Link>
+                      <Link
+                        to="/salaries" 
+                        className={`${location.pathname.startsWith('/salar') ? 'text-primary-500 font-medium' : 'text-neutral-600'} px-3 py-2 rounded-md text-base`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Salary Management
+                      </Link>
+                      <div className="border-t border-neutral-200 pt-4">
+                        <div className="flex items-center mb-3">
+                          <div className="h-8 w-8 rounded-full bg-primary-200 flex items-center justify-center text-white mr-2">
+                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-neutral-700">{user?.name}</p>
+                            <p className="text-xs text-neutral-500">{user?.email}</p>
+                          </div>
+                        </div>
+                        <Link
+                          to="/profile"
+                          className="block px-3 py-2 rounded-md text-base text-neutral-600"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Your Profile
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            handleLogout();
+                          }}
+                          className="block w-full text-left px-3 py-2 rounded-md text-base text-neutral-600"
+                        >
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex space-x-4">
+              <Link
+                to="/login"
+                className={`${location.pathname === '/login' ? 'bg-primary-500 text-white' : 'text-neutral-600 hover:text-primary-500'} px-4 py-2 rounded-md font-medium transition-colors`}
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className={`${location.pathname === '/register' ? 'bg-primary-500 text-white' : 'border border-primary-500 text-primary-500'} px-4 py-2 rounded-md font-medium transition-colors`}
+              >
+                Register
+              </Link>
+              </div>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
